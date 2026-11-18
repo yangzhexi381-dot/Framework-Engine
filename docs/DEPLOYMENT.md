@@ -1,12 +1,14 @@
 # Framework Engine 在线部署
 
-[Framework Engine 在线入口](https://framework-engine-yzx.curvedfrond8.chatgpt.site/) 使用 ChatGPT Sites 的所有者访问权限，应使用站点所有者的 ChatGPT 账号登录。部署源自 GitHub 私有仓库 `main` 中现有的 FE 演示、核心和适配器。站点使用静态资源托管，状态更新、Daniell 电池计算及互动场景由浏览器运行。Node.js 22 或更新版本用于构建和开发测试。
+[公开试玩入口](https://yangzhexi381-dot.github.io/framework-engine-demo/) 使用 GitHub Pages，从 [framework-engine-demo](https://github.com/yangzhexi381-dot/framework-engine-demo) 的 `main` 根目录发布独立的 `index.html`。该文件内嵌两个示例和运行所需的代码及样式。发布新版试玩时，在演示仓库单独提交经过验证的新构建文件。
 
-## 更新版本
+[ChatGPT Sites](https://framework-engine-yzx.curvedfrond8.chatgpt.site/) 也公开托管同一演示。两个入口均由浏览器运行状态更新、Daniell 电池计算及互动场景。Node.js 22 或更新版本用于构建和开发测试。
+
+## 更新 ChatGPT Sites 版本
 
 1. 确认 GitHub 上 `main` 对应的 Node 和浏览器测试通过。
 2. 核对选定提交和 `.openai/hosting.json` 的站点 ID。运行 `npm run build:static`，确认 `dist/index.html`、`dist/examples/` 和 `dist/src/` 均存在。
-3. 使用已绑定的同一 Sites 站点提交该源码版本和对应构建目录，并部署为所有者可访问的版本。验证线上流程后记录 GitHub 提交与部署结果。保留上一已成功部署的版本作为回退点。
+3. 使用已绑定的同一 Sites 站点提交该源码版本和对应构建目录并部署。验证线上流程后记录 GitHub 提交与部署结果。保留上一已成功部署的版本作为回退点。
 
 GitHub Actions 在 `main` 上自动打包通过验收的提交。仓库当前没有长效的 Sites 发布凭据，部署在线版本使用站点所有者授权的发布操作。若构建或验收失败，现有在线版本继续使用最近一次成功部署的版本。
 

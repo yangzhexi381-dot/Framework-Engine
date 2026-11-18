@@ -4,7 +4,7 @@ Framework Engine（FE）是跨领域应用的轻量运行时。注册模块、�
 
 ## 在线使用
 
-[打开 Framework Engine](https://framework-engine-yzx.curvedfrond8.chatgpt.site/) 可体验 Daniell 电池与「灯塔值守」。站点仅供项目所有者登录访问。在线版由浏览器直接运行，可使用手机、平板和电脑。
+[打开在线试玩](https://yangzhexi381-dot.github.io/framework-engine-demo/) 可体验 Daniell 电池与「灯塔值守」。页面无需登录，支持手机、平板和电脑。[试玩仓库](https://github.com/yangzhexi381-dot/framework-engine-demo)
 
 状态保存在当前浏览器的 `localStorage`。使用同一浏览器、同一站点地址刷新会恢复示例状态。首次打开 HTTPS 在线版会使用独立于本地开发地址的存档空间。换设备或浏览器时，先导出 JSON，再在另一端打开同一示例并导入。应用没有跨设备自动同步。
 
@@ -45,7 +45,7 @@ npm run test:cf -- ../Chemistry-Framework
 
 详见 [架构与约定](docs/ARCHITECTURE.md)、[CF 代码审查](docs/CF_REVIEW.md)、[验收记录](docs/VALIDATION.md)、[CF 接入复现](integrations/chemistry/README.md)和 [版本记录](CHANGELOG.md)。
 
-本仓库为私有开发仓库，许可证和公开发布由维护者后续确认。
+本仓库公开展示 FE 源码与开发记录。许可证由维护者后续确认。
 
 ## Story Framework 离线接入
 
