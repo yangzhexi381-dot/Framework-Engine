@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Synthetic story save fixture</title>
+<p id="progress"></p>
+<button id="advance" type="button">Advance</button>
+<button id="finish" type="button">Finish</button>
+<button id="clear" type="button">Clear</button>
+<button id="designRevealBtn" type="button" hidden>Design</button>
+<script>
+const key = 'fe.synthetic.story';
+function storeGet(key){return JSON.parse(localStorage.getItem(key));}
+function storeSet(key,value){localStorage.setItem(key,JSON.stringify(value));}
+let meta = storeGet(key) ?? { progress: 0, worldAwake: false };
+function render() {
+  document.querySelector('#progress').textContent = meta.progress;
+  document.querySelector('#designRevealBtn').hidden = !meta.worldAwake;
+}
+function finish(e) {
+  if(e==='TRUE')meta.worldAwake=true;
+  storeSet(key, meta);
+  render();
+}
+document.querySelector('#advance').onclick = () => {
+  meta.progress++;
+  storeSet(key, meta);
+  render();
+};
+document.querySelector('#finish').onclick = () => finish('TRUE');
+document.querySelector('#clear').onclick = () => {
+  localStorage.removeItem(key);
+  meta = { progress: 0, worldAwake: false };
+  render();
+};
+render();
+</script>
+</html>
