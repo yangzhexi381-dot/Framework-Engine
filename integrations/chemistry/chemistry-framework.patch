@@ -1,0 +1,52 @@
+diff --git a/src/app.js b/src/app.js
+index e9c92fa..be3266d 100644
+--- a/src/app.js
++++ b/src/app.js
+@@ -279,7 +279,14 @@ async function boot(){
+  renderDomains();renderGraph();renderRelations();renderTheory();renderStructureTheory();renderModulePaths();
+  window.CFKnowledge=Object.freeze({focusNode:focusKnowledgeNode});
+  if(window.location.hash.startsWith('#concept/'))focusKnowledgeNode(window.location.hash.slice(9));
+- CFIntuitionWorkbench.init({nodes:db.nodes,relations:db.relations,examples:bundled.science_cases||[],relationLabels});
++ let inquiryStore;
++ try {
++  const {createChemistryInquiryStore}=await import('./fe/adapters/chemistry/inquiry-store.js');
++  inquiryStore=createChemistryInquiryStore({getStorage:()=>globalThis.localStorage});
++ } catch (error) {
++  console.warn('Framework Engine inquiry adapter unavailable. Using browser storage.', error);
++ }
++ CFIntuitionWorkbench.init({nodes:db.nodes,relations:db.relations,examples:bundled.science_cases||[],relationLabels,inquiryStore});
+ }
+ boot().catch(e=>{
+  $('#graph').innerHTML='<p role="alert">知识数据加载失败：'+esc(e.message)+'。可刷新重试，其他页面仍可使用。</p>';
+diff --git a/src/intuition-workbench.js b/src/intuition-workbench.js
+index 77bde8d..ac94d3a 100644
+--- a/src/intuition-workbench.js
++++ b/src/intuition-workbench.js
+@@ -3,7 +3,7 @@
+   const escape = value => String(value ?? '').replace(/[&<>"']/g, char =>
+     ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[char]));
+
+-  function init({nodes, relations, examples, relationLabels}) {
++  function init({nodes, relations, examples, relationLabels, inquiryStore}) {
+     const $ = id => document.getElementById(id);
+     const input = $('intuition');
+     const context = $('system');
+@@ -16,7 +16,7 @@
+     let pending = null;
+
+     try {
+-      const stored = JSON.parse(localStorage.getItem(storageKey));
++      const stored = inquiryStore ? inquiryStore.read() : JSON.parse(localStorage.getItem(storageKey));
+       if (Array.isArray(stored)) records = stored.filter(item => typeof item?.user_intuition === 'string');
+     } catch (_) {}
+
+@@ -194,7 +194,8 @@
+       };
+       const next = record ? records.map(item => item === record ? snapshot : item) : [...records, snapshot];
+       try {
+-        localStorage.setItem(storageKey, JSON.stringify(next));
++        if (inquiryStore) inquiryStore.replace(next);
++        else localStorage.setItem(storageKey, JSON.stringify(next));
+         records = next;
+         current.record = snapshot;
+         renderSaved();
