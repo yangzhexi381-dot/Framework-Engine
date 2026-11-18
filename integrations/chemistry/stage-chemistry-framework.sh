@@ -14,14 +14,20 @@ if ! git -C "$CF_CHECKOUT" cat-file -e "$PIN^{commit}" 2>/dev/null; then
   echo "CF checkout does not contain pinned source $PIN" >&2
   exit 2
 fi
-if [[ -e "$OUTPUT" ]]; then
-  echo "Output already exists; choose a fresh staging directory: $OUTPUT" >&2
+mkdir -p -- "$(dirname -- "$OUTPUT")"
+if ! mkdir -- "$OUTPUT"; then
+  echo "Choose a new, writable staging directory: $OUTPUT" >&2
   exit 2
 fi
-mkdir -p "$OUTPUT"
 git -C "$CF_CHECKOUT" archive "$PIN" | tar -x -C "$OUTPUT"
-(cd "$OUTPUT" && git apply --check "$PATCH")
-(cd "$OUTPUT" && git apply "$PATCH")
+(
+  cd -- "$OUTPUT"
+  # The preview is an archive, so git apply must not discover a parent worktree.
+  export GIT_CEILING_DIRECTORIES="$(dirname -- "$(pwd -P)")"
+  git apply "$PATCH"
+)
+# The pinned CF scripts use CommonJS under Node. Keep any parent ESM scope out.
+printf '{"private":true,"type":"commonjs"}\n' > "$OUTPUT/package.json"
 mkdir -p "$OUTPUT/src/fe"
 cp -R "$FE_ROOT/src/." "$OUTPUT/src/fe/"
 printf '{"private":true,"type":"module"}\n' > "$OUTPUT/src/fe/package.json"
