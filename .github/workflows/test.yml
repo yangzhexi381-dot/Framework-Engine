@@ -52,7 +52,8 @@ jobs:
             sleep 1
           done
           curl --fail --silent --show-error --output /dev/null http://127.0.0.1:8000/
-          node tests/browser-acceptance.cjs
+          FE_TEST_URL=http://127.0.0.1:8000/examples/ node tests/browser-acceptance.cjs
+          node tests/playground-browser.cjs
       - name: Browser acceptance of the CF integration and existing flows
         env:
           CF_BROWSER: '1'
@@ -79,3 +80,25 @@ jobs:
           path: dist/
           if-no-files-found: error
           retention-days: 14
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist/
+
+  deploy-pages:
+    if: github.event_name == 'push'
+    needs: static-artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

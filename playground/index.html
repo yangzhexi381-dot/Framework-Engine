@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="试玩 Framework Engine 的互动故事与结构化学实验室。">
+  <title>Framework Engine 试玩</title>
+  <style>
+    :root {
+      color-scheme: light;
+      color: #182c31;
+      background: #f5f7f4;
+      font: 16px/1.65 system-ui, "Noto Sans SC", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .wrap { width: min(100% - 2rem, 66rem); margin: 0 auto; }
+    header { border-bottom: 1px solid #dbe3dc; }
+    header .wrap { min-height: 4rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    header strong { font-size: 0.95rem; letter-spacing: 0.01em; }
+    a { color: #1b614c; text-underline-offset: 0.2em; }
+    a:focus-visible { outline: 3px solid #086a50; outline-offset: 4px; }
+    main { padding-block: clamp(2.3rem, 8vw, 5.2rem) 4rem; }
+    h1 { font-size: clamp(2.35rem, 6.5vw, 4rem); line-height: 1.12; margin: 0 0 1rem; }
+    .intro { color: #455858; margin: 0 0 2.4rem; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+    article {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1.35rem;
+      border: 1px solid #d8e3d9;
+      border-radius: 1rem;
+      background: #fff;
+    }
+    h2 { margin: 0 0 0.55rem; font-size: 1.25rem; line-height: 1.35; }
+    article p { margin: 0 0 1.3rem; color: #435758; }
+    .launch {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.75rem;
+      padding: 0.55rem 0.88rem;
+      margin-top: auto;
+      border-radius: 0.46rem;
+      background: #185944;
+      color: white;
+      font-weight: 650;
+      text-decoration: none;
+    }
+    .launch:hover { background: #113e30; }
+    @media (max-width: 780px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <strong>Framework Engine</strong>
+      <a href="https://github.com/yangzhexi381-dot/Framework-Engine">查看源码</a>
+    </div>
+  </header>
+  <main class="wrap">
+    <h1>试玩</h1>
+    <p class="intro">选一个互动体验，在浏览器里直接开始。</p>
+    <section class="grid" aria-label="试玩项目">
+      <article>
+        <h2>无条件内鬼</h2>
+        <p>跟随剧情作出选择、收集线索，探索不同结局。进度保存在当前浏览器。</p>
+        <a class="launch" href="./playground/story.html">开始游戏</a>
+      </article>
+      <article>
+        <h2>结构化学交互实验室</h2>
+        <p>动手调节参数，观察势阱、原子轨道、能级耦合、光谱、对称性和 Hückel 模型。</p>
+        <a class="launch" href="./playground/structure.html">进入实验室</a>
+      </article>
+      <article>
+        <h2>Daniell 电池与灯塔值守</h2>
+        <p>改变电池条件计算电势，或者进入灯塔故事体验分支选择。</p>
+        <a class="launch" href="./examples/">打开基础示例</a>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

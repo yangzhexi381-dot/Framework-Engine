@@ -19,7 +19,15 @@ test('static build preserves the demo route and local module graph without publi
     assert.equal(result.status, 0, result.stderr);
 
     const rootPage = await readFile(path.join(output, 'index.html'), 'utf8');
-    assert.match(rootPage, /url=\.\/examples\//);
+    assert.ok(rootPage.includes('href="./examples/"'));
+    for (const name of ['story.html', 'structure.html']) {
+      assert.ok(rootPage.includes(`href="./playground/${name}"`));
+      const relativePath = path.join('playground', name);
+      assert.deepEqual(
+        await readFile(path.join(output, relativePath)),
+        await readFile(path.join(projectRoot, relativePath))
+      );
+    }
     assert.ok((await stat(path.join(output, 'examples/index.html'))).isFile());
     assert.ok((await stat(path.join(output, 'examples/demo.js'))).isFile());
     assert.ok((await stat(path.join(output, 'examples/style.css'))).isFile());
