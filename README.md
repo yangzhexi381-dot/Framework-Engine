@@ -4,7 +4,7 @@ Framework Engine（FE）是跨领域应用的轻量运行时。注册模块、�
 
 ## 在线使用
 
-[打开在线试玩](https://yangzhexi381-dot.github.io/framework-engine-demo/) 可体验 Daniell 电池与「灯塔值守」。页面无需登录，支持手机、平板和电脑。[试玩仓库](https://github.com/yangzhexi381-dot/framework-engine-demo)
+[打开在线试玩](https://yangzhexi381-dot.github.io/framework-engine-demo/) 可体验《无条件内鬼》、结构化学交互实验室、Daniell 电池和「灯塔值守」。页面无需登录，支持手机、平板和电脑。[试玩仓库](https://github.com/yangzhexi381-dot/framework-engine-demo)
 
 状态保存在当前浏览器的 `localStorage`。使用同一浏览器、同一站点地址刷新会恢复示例状态。首次打开 HTTPS 在线版会使用独立于本地开发地址的存档空间。换设备或浏览器时，先导出 JSON，再在另一端打开同一示例并导入。应用没有跨设备自动同步。
 
@@ -30,7 +30,7 @@ npm run test:cf -- ../Chemistry-Framework
 
 前两项检查引擎、适配器和演示入口。最后一项从已审查的 CF 提交重建独立树，测试真实查询控制器和 CF 现有回归。CI 另用 Chromium 运行演示与 CF 浏览器交互。
 
-`npm run build:static` 将现有应用及其浏览器模块打包至 `dist/`。GitHub Actions 在 `main` 上通过测试和浏览器验收后自动生成对应提交的静态制品。更新在线站点的步骤见[部署说明](docs/DEPLOYMENT.md)。
+`npm run build:static` 将现有应用及其浏览器模块打包至 `dist/`。GitHub Actions 在 `main` 上通过测试和浏览器验收后自动将该版本发布到 GitHub Pages。试玩入口随发布更新，详见[部署说明](docs/DEPLOYMENT.md)。
 
 | 路径 | 职责 |
 | --- | --- |

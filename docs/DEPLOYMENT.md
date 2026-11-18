@@ -1,19 +1,15 @@
 # Framework Engine 在线部署
 
-[公开试玩入口](https://yangzhexi381-dot.github.io/framework-engine-demo/) 使用 GitHub Pages，从 [framework-engine-demo](https://github.com/yangzhexi381-dot/framework-engine-demo) 的 `main` 根目录发布独立的 `index.html`。该文件内嵌两个示例和运行所需的代码及样式。发布新版试玩时，在演示仓库单独提交经过验证的新构建文件。
+[公开试玩入口](https://yangzhexi381-dot.github.io/framework-engine-demo/) 转到 [Framework Engine GitHub Pages](https://yangzhexi381-dot.github.io/Framework-Engine/)，两处地址访问同一个发布版本。主仓库维护试玩首页、内容和发布流程。演示仓库维护已有网址的跳转。
 
-[ChatGPT Sites](https://framework-engine-yzx.curvedfrond8.chatgpt.site/) 也公开托管同一演示。两个入口均由浏览器运行状态更新、Daniell 电池计算及互动场景。Node.js 22 或更新版本用于构建和开发测试。
+## 发布与本地检查
 
-## 更新 ChatGPT Sites 版本
-
-1. 确认 GitHub 上 `main` 对应的 Node 和浏览器测试通过。
-2. 核对选定提交和 `.openai/hosting.json` 的站点 ID。运行 `npm run build:static`，确认 `dist/index.html`、`dist/examples/` 和 `dist/src/` 均存在。
-3. 使用已绑定的同一 Sites 站点提交该源码版本和对应构建目录并部署。验证线上流程后记录 GitHub 提交与部署结果。保留上一已成功部署的版本作为回退点。
-
-GitHub Actions 在 `main` 上自动打包通过验收的提交。仓库当前没有长效的 Sites 发布凭据，部署在线版本使用站点所有者授权的发布操作。若构建或验收失败，现有在线版本继续使用最近一次成功部署的版本。
+1. 用 Node.js 22 或更新版本运行 `npm ci`、`npm run check`、`npm test` 和 `npm run build:static`。
+2. 在项目目录运行 `python3 -m http.server 8000 --directory dist` 并访问 <http://127.0.0.1:8000/>。试玩首页按需打开各应用，FE 示例仍位于 `examples/`。
+3. 合并至 `main` 后，GitHub Actions 运行 Node、CF 集成和浏览器验收。全部通过后将 `dist/` 上传并发布到 GitHub Pages。检查失败时继续提供最近一次成功部署的版本。
 
 ## 验收与存档
 
-浏览器测试在 Android 手机仿真、触控平板视口和桌面视口运行完整流程。Daniell 电池测试包含非法输入、结果变化和刷新恢复。「灯塔值守」测试包含选择、结局、JSON 导出、重置、导入和刷新恢复。
+浏览器测试使用 Android 手机仿真、触控平板视口和桌面视口。新增试玩覆盖《无条件内鬼》的新游戏和刷新恢复，以及结构化学实验室的量子数、能量与节点联动。原有 Daniell 电池和「灯塔值守」仍验证状态、刷新、选择和 JSON 导入导出。
 
-浏览器存档按站点来源隔离。在线地址、开发地址和另一台设备各有自己的存储空间，导出的 JSON 可以手动转移。托管目录由演示和 FE 浏览器模块组成。未发布作者的真实互动作品、项目测试文件、环境文件或访问凭据。
+两个 GitHub Pages 地址共享浏览器存储来源。以前用同一浏览器打开试玩链接保存的进度仍可访问。开发地址和其他设备有各自的存储空间，支持 JSON 的示例可手动导入存档以转移进度。
