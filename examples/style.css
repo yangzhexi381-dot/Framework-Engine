@@ -1,0 +1,69 @@
+:root {
+  color-scheme: dark;
+  font: 16px/1.55 system-ui, sans-serif;
+  color: #eef4ff;
+  background: #0b1220;
+  --muted: #a7b5c9;
+  --accent: #8ee3cb;
+  --border: #364762;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px max(16px, calc((100% - 920px) / 2));
+  border-bottom: 1px solid var(--border);
+}
+main { max-width: 960px; padding: 20px 20px 48px; margin: auto; }
+h1 { font-size: clamp(1.85rem, 5vw, 2.7rem); margin-bottom: 0; }
+h2 { margin: 0 0 12px; font-size: 1.25rem; }
+.intro p, .muted { color: var(--muted); }
+.grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 16px; }
+.card {
+  background: #141f31;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 16px;
+  padding: clamp(16px, 3vw, 24px);
+}
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 16px 0;
+}
+.arrow, .voltage { color: var(--accent); }
+.voltage { font-weight: 750; font-size: clamp(2.25rem, 5vw, 3rem); }
+.voltage small { font-size: 1.1rem; }
+.params { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.params label { display: grid; gap: 5px; }
+input, select, button {
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 12px;
+  font: inherit;
+  color: inherit;
+  background: #0d1726;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+button { cursor: pointer; }
+button:hover { border-color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.note, .state { border-left: 3px solid var(--accent); padding: 10px 12px; }
+.toolbar, .choices { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+.import { display: grid; gap: 5px; max-width: 100%; }
+.ending { color: var(--accent); }
+.error { background: #542a35; border-radius: 8px; margin-bottom: 12px; padding: 12px; }
+
+@media (max-width: 680px) {
+  main { padding-inline: 14px; }
+  .grid, .params { grid-template-columns: 1fr; }
+  .cell { flex-wrap: wrap; }
+  header label { display: grid; }
+}

@@ -1,0 +1,55 @@
+name: Framework Engine tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - name: Test the real CF checkout with FE
+        run: |
+          git clone --no-checkout https://github.com/yangzhexi381-dot/Chemistry-Framework.git "$RUNNER_TEMP/chemistry-framework"
+          npm run test:cf -- "$RUNNER_TEMP/chemistry-framework"
+
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright for acceptance tests
+        run: |
+          npm install --prefix "$RUNNER_TEMP/browser" --no-save --no-package-lock playwright@1.58.2
+          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/browser/node_modules" >> "$GITHUB_ENV"
+      - name: Browser acceptance of the FE demo
+        run: |
+          npm start > "$RUNNER_TEMP/fe-http.log" 2>&1 &
+          for i in $(seq 1 10); do
+            if curl --fail --silent --output /dev/null http://127.0.0.1:8000/examples/; then break; fi
+            sleep 1
+          done
+          curl --fail --silent --show-error --output /dev/null http://127.0.0.1:8000/examples/
+          node tests/browser-acceptance.cjs
+      - name: Browser acceptance of the CF integration and existing flows
+        env:
+          CF_BROWSER: '1'
+        run: |
+          git clone --no-checkout https://github.com/yangzhexi381-dot/Chemistry-Framework.git "$RUNNER_TEMP/chemistry-framework"
+          npm run test:cf -- "$RUNNER_TEMP/chemistry-framework"
