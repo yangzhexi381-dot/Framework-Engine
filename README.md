@@ -1,4 +1,4 @@
-# Framework Engine v0.1.0
+# Framework Engine v0.2.0
 
 Framework Engine（FE）是跨领域应用的轻量运行时。注册模块、管理依赖和状态、交换事件、保存 JSON 数据由 FE 提供。知识、科学模型和叙事规则由各领域应用维护。
 
@@ -33,7 +33,18 @@ npm run test:cf -- ../Chemistry-Framework
 | `src/models/` 和 `src/ui/` | 演示计算和通用界面辅助 |
 | `examples/` | 实际调用 FE 的两个浏览器示例 |
 | `integrations/chemistry/` | CF 补丁、私有测试树构建和集成测试 |
+| `integrations/story/` | 将现有 Story Framework 试点接入 FE，并生成单文件离线版本 |
 
 详见 [架构与约定](docs/ARCHITECTURE.md)、[CF 代码审查](docs/CF_REVIEW.md)、[验收记录](docs/VALIDATION.md)、[CF 接入复现](integrations/chemistry/README.md)和 [版本记录](CHANGELOG.md)。
 
 本仓库为私有开发仓库，许可证和公开发布由维护者后续确认。
+
+## Story Framework 离线接入
+
+从 Story Framework 原包取出 v2.1 互动小说 HTML，在 FE 根目录运行：
+
+```sh
+npm run integrate:story -- ./source.html ./story-fe.html
+```
+
+使用浏览器直接打开生成的 `story-fe.html`。输出须是新文件。故事原有的存档键、分支和设计理念揭示条件沿用。真实作品由作者另行保管，GitHub 仓库中的测试使用合成数据。[接入与测试说明](integrations/story/README.md)

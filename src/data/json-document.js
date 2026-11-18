@@ -2,7 +2,8 @@ export function createMemoryStorage() {
   const entries = new Map();
   return {
     getItem: key => entries.get(key) ?? null,
-    setItem: (key, value) => { entries.set(key, value); }
+    setItem: (key, value) => { entries.set(key, value); },
+    removeItem: key => { entries.delete(key); }
   };
 }
 
@@ -26,6 +27,10 @@ export function createJsonDocument({ getStorage, key }) {
       const snapshot = JSON.parse(raw);
       getStorage().setItem(key, raw);
       return snapshot;
+    },
+
+    remove() {
+      getStorage().removeItem(key);
     }
   };
 }
