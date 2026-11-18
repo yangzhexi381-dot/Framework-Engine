@@ -20,6 +20,7 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm test
+      - run: npm run build:static
       - name: Test the real CF checkout with FE
         run: |
           git clone --no-checkout https://github.com/yangzhexi381-dot/Chemistry-Framework.git "$RUNNER_TEMP/chemistry-framework"
@@ -42,12 +43,15 @@ jobs:
         run: node tests/story-offline.browser.cjs
       - name: Browser acceptance of the FE demo
         run: |
-          npm start > "$RUNNER_TEMP/fe-http.log" 2>&1 &
+          npm run build:static
+          python3 -m http.server 8000 --bind 127.0.0.1 --directory dist > "$RUNNER_TEMP/fe-http.log" 2>&1 &
+          fe_server=$!
+          trap 'kill "$fe_server" 2>/dev/null || true' EXIT
           for i in $(seq 1 10); do
-            if curl --fail --silent --output /dev/null http://127.0.0.1:8000/examples/; then break; fi
+            if curl --fail --silent --output /dev/null http://127.0.0.1:8000/; then break; fi
             sleep 1
           done
-          curl --fail --silent --show-error --output /dev/null http://127.0.0.1:8000/examples/
+          curl --fail --silent --show-error --output /dev/null http://127.0.0.1:8000/
           node tests/browser-acceptance.cjs
       - name: Browser acceptance of the CF integration and existing flows
         env:
@@ -55,3 +59,23 @@ jobs:
         run: |
           git clone --no-checkout https://github.com/yangzhexi381-dot/Chemistry-Framework.git "$RUNNER_TEMP/chemistry-framework"
           npm run test:cf -- "$RUNNER_TEMP/chemistry-framework"
+
+  static-artifact:
+    if: github.event_name == 'push'
+    needs: [test, browser]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm run build:static
+      - uses: actions/upload-artifact@v4
+        with:
+          name: framework-engine-static-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14
