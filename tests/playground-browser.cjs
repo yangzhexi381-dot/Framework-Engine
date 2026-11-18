@@ -40,6 +40,7 @@ async function verify(browser, target, [name, options]) {
 
     await openCatalog();
     await activate(page.locator('a[href="./playground/structure.html"]'));
+    await activate(page.locator('button[data-goto="1"]'));
     await page.locator('#nBox').fill('5');
     assert.equal(await page.locator('#boxNodes').textContent(), '4');
     assert.equal(await page.locator('#boxEnergy').textContent(), '25 E₁');
