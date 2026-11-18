@@ -1,0 +1,62 @@
+name: Framework Engine CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout Framework Engine
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install locked development dependencies
+        run: npm ci --ignore-scripts
+      - name: Test the engine and check syntax
+        run: |
+          npm test
+          find src examples integrations tests -type f \( -name '*.js' -o -name '*.mjs' -o -name '*.cjs' \) -print0 | xargs -0 -n 1 node --check
+      - name: Checkout the audited Chemistry Framework baseline
+        uses: actions/checkout@v4
+        with:
+          repository: yangzhexi381-dot/Chemistry-Framework
+          ref: 61575a45e2eac096f5b7ddcbf6c40ae2494b8ef1
+          path: cf-baseline
+          persist-credentials: false
+      - name: Stage the private integration and run CF regressions
+        run: |
+          npm run integrate:cf -- cf-baseline "$RUNNER_TEMP/cf-preview"
+          (
+            cd "$RUNNER_TEMP/cf-preview"
+            node --test tests/*.test.cjs
+            for source in src/*.js src/models/*.js; do node --check "$source"; done
+          )
+      - name: Install Chromium for acceptance
+        run: npx --no-install playwright install --with-deps --only-shell chromium
+      - name: Verify the demo and integrated CF in Chromium
+        env:
+          CF_TEST_URL: http://127.0.0.1:8765/
+          NODE_PATH: ${{ github.workspace }}/node_modules
+        run: |
+          npm start > "$RUNNER_TEMP/fe-http.log" 2>&1 &
+          fe_server=$!
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory "$RUNNER_TEMP/cf-preview" > "$RUNNER_TEMP/cf-http.log" 2>&1 &
+          cf_server=$!
+          trap 'kill "$fe_server" "$cf_server" 2>/dev/null || true' EXIT
+          for url in http://127.0.0.1:8080/ "$CF_TEST_URL"; do
+            curl --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 1 --output /dev/null "$url"
+          done
+          node tests/story-browser.cjs
+          node tests/chemistry-browser.cjs
+          node "$RUNNER_TEMP/cf-preview/tests/curriculum-browser.cjs"

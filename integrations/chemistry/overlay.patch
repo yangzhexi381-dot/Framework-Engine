@@ -1,0 +1,69 @@
+diff --git a/index.html b/index.html
+index 9d8c7a0..17665b6 100644
+--- a/index.html
++++ b/index.html
+@@ -90,7 +90,7 @@
+ <script src="src/network-graph.js?v=20261118-20"></script>
+ <script src="src/intuition-analysis.js?v=1"></script>
+ <script src="src/intuition-literature.js?v=1"></script>
+-<script src="src/intuition-workbench.js?v=1"></script>
++<script src="src/intuition-workbench.js?v=fe-0.1"></script>
+ <script src="src/app.js?v=20261118-intuition"></script>
+ <script src="src/workbench.js"></script>
+ <script src="src/physical-workbench.js"></script>
+diff --git a/src/intuition-workbench.js b/src/intuition-workbench.js
+index 77bde8d..b745ad0 100644
+--- a/src/intuition-workbench.js
++++ b/src/intuition-workbench.js
+@@ -1,25 +1,33 @@
+ (function (global) {
+-  const storageKey = 'chemistry-framework-inquiries';
+   const escape = value => String(value ?? '').replace(/[&<>"']/g, char =>
+     ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[char]));
+ 
+-  function init({nodes, relations, examples, relationLabels}) {
++  async function init({nodes, relations, examples, relationLabels}) {
+     const $ = id => document.getElementById(id);
++    const host = $('analysis');
++    let adapter;
++    try {
++      adapter = await import('./framework-engine/adapters/chemistry.js');
++    } catch (_) {
++      host.innerHTML = '<p role="alert">无法加载查询存储。请刷新页面重试。</p>';
++      return;
++    }
++    // Resolve localStorage only when the adapter actually reads or writes. Some
++    // browsers throw while merely accessing the property in restricted contexts.
++    const storage = {
++      getItem(key) { return global.localStorage.getItem(key); },
++      setItem(key, value) { return global.localStorage.setItem(key, value); }
++    };
++    const inquiryStore = adapter.createChemistryInquiryStore(storage);
+     const input = $('intuition');
+     const context = $('system');
+-    const host = $('analysis');
+     const index = global.CFIntuitionAnalysis.createIndex(nodes, relations);
+     const savedHost = $('saved-inquiries');
+     const initial = host.innerHTML;
+-    let records = [];
++    let records = inquiryStore.read();
+     let current = null;
+     let pending = null;
+ 
+-    try {
+-      const stored = JSON.parse(localStorage.getItem(storageKey));
+-      if (Array.isArray(stored)) records = stored.filter(item => typeof item?.user_intuition === 'string');
+-    } catch (_) {}
+-
+     function conceptLink(node, text = node.title) {
+       return '<a class="concept-link" href="#concept/' + encodeURIComponent(node.id) + '">' + escape(text) + '</a>';
+     }
+@@ -194,7 +202,7 @@
+       };
+       const next = record ? records.map(item => item === record ? snapshot : item) : [...records, snapshot];
+       try {
+-        localStorage.setItem(storageKey, JSON.stringify(next));
++        inquiryStore.write(next);
+         records = next;
+         current.record = snapshot;
+         renderSaved();

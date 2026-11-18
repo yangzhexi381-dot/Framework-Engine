@@ -1,0 +1,61 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  background: #172019;
+  color: #f1efdd;
+}
+
+main {
+  max-width: 38rem;
+  margin: clamp(2rem, 15vh, 8rem) auto;
+  padding: 0 1.25rem;
+}
+
+h1 {
+  font-family: Georgia, "Noto Serif", serif;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  line-height: 1.1;
+  margin: 0 0 1.25rem;
+}
+
+#scene {
+  border-block: 1px solid #657360;
+  padding-block: 1.25rem;
+  line-height: 1.8;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+button {
+  background: #e1ebc5;
+  border: 1px solid #e1ebc5;
+  border-radius: 0.4rem;
+  color: #172019;
+  cursor: pointer;
+  font: inherit;
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+}
+
+button + button {
+  background: transparent;
+  color: inherit;
+}
+
+button:focus-visible {
+  outline: 2px solid #f1efdd;
+  outline-offset: 3px;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+#status {
+  color: #c5cfbc;
+}
