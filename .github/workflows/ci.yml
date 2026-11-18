@@ -43,13 +43,13 @@ jobs:
             for source in src/*.js src/models/*.js; do node --check "$source"; done
           )
       - name: Install Chromium for acceptance
-        run: npx --no-install playwright install --with-deps --only-shell chromium
+        run: npx --no-install playwright install --with-deps chromium
       - name: Verify the demo and integrated CF in Chromium
         env:
           CF_TEST_URL: http://127.0.0.1:8765/
           NODE_PATH: ${{ github.workspace }}/node_modules
         run: |
-          npm start > "$RUNNER_TEMP/fe-http.log" 2>&1 &
+          node examples/serve.mjs > "$RUNNER_TEMP/fe-http.log" 2>&1 &
           fe_server=$!
           python3 -m http.server 8765 --bind 127.0.0.1 --directory "$RUNNER_TEMP/cf-preview" > "$RUNNER_TEMP/cf-http.log" 2>&1 &
           cf_server=$!

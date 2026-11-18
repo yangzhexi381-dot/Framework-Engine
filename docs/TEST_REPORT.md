@@ -10,5 +10,6 @@
 | `node tests/story-browser.cjs` | Chromium 通过。覆盖推进、刷新恢复、重置和三种视口。 |
 | `node tests/chemistry-browser.cjs` | Chromium 通过。覆盖实际 FE 模块加载、旧记录重开、原 ID 更新、刷新恢复和写入失败。 |
 | CF `tests/curriculum-browser.cjs` | 基线与集成预览均在 Chromium 通过，覆盖图谱、触控事件、课程深链接、查询及科学工作台。 |
+| CF `tests/browser-harness.html` | 集成预览在 390、768、1280 px 通过，覆盖 N₂O₄ 计算、无效输入和重置、H₂⁺ 态选择及标签导航。 |
 
 GitHub Actions 的浏览器验收使用 Chromium。真机浏览器、跨设备同步和实际 Crossref 服务可用性属于后续验证范围。下一版可优先让第二个真实领域模块验证适配接口，并确定 FE 源码发布授权、许可证和 CF 的生产部署方式。

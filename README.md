@@ -22,7 +22,7 @@ npm test
 浏览器测试另需 Chromium。安装测试浏览器后，在演示运行期间执行 `node tests/story-browser.cjs`。
 
 ```sh
-npx --no-install playwright install --only-shell chromium
+npx --no-install playwright install chromium
 ```
 
 ## Chemistry Framework 接入
