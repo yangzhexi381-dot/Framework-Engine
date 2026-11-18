@@ -29,11 +29,24 @@ async function verify(browser, target, token, profile) {
   try {
     if (token) {
       await context.route(url => url.origin === target.origin, async route => {
-        const response = await route.fetch({
-          headers: { ...route.request().headers(), 'OAI-Sites-Authorization': 'Bearer ' + token },
-          maxRedirects: 0
-        });
-        await route.fulfill({ response });
+        try {
+          const response = await fetch(route.request().url(), {
+            headers: { 'OAI-Sites-Authorization': 'Bearer ' + token },
+            redirect: 'manual',
+            signal: AbortSignal.timeout(15000)
+          });
+          const headers = Object.fromEntries(response.headers);
+          delete headers['content-encoding'];
+          delete headers['content-length'];
+          await route.fulfill({
+            status: response.status,
+            headers,
+            body: Buffer.from(await response.arrayBuffer())
+          });
+        } catch {
+          // Do not forward network diagnostics that may contain credentials.
+          await route.abort('failed');
+        }
       });
     }
 
