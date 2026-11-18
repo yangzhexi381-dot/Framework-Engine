@@ -23,7 +23,7 @@ jobs:
       - name: Test the real CF checkout with FE
         run: |
           git clone --no-checkout https://github.com/yangzhexi381-dot/Chemistry-Framework.git "$RUNNER_TEMP/chemistry-framework"
-          npm run test:cf -- "$RUNNER_TEMP/chemistry-framework"
+          TMPDIR="$GITHUB_WORKSPACE" npm run test:cf -- "$RUNNER_TEMP/chemistry-framework"
 
   browser:
     runs-on: ubuntu-24.04
