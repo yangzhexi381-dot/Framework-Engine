@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "node scripts/serve.js",
+    "build:static": "node scripts/build-static.js",
     "test": "node --test tests/*.test.js",
     "check": "node scripts/check-syntax.js",
     "test:cf": "bash scripts/test-cf.sh",
